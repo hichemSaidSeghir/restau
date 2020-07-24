@@ -42,7 +42,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAlive
 //                print(foods);
 //                print(foods.length);
                 return GridProduct(
-                  img: food['img'],
+                  //img: food['img'],
                   isFav: true,
                   name: food['name'],
 

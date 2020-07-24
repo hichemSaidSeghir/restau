@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:restaurant_ui_kit/util/restau.dart';
 
@@ -42,7 +44,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.asset(
-                      "${restaurant[1]['img']}",
+                      "assets/food"+((1 + new Random().nextInt(12 - 1)).toString())+".jpeg",
                       fit: BoxFit.cover,
                     ),
                   ),

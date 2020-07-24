@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:restaurant_ui_kit/screens/details.dart';
 
 class GridProduct extends StatelessWidget {
 
   final String name;
-  final String img;
+ // final String img;
   final bool isFav;
 
 
   GridProduct({
     Key key,
     @required this.name,
-    @required this.img,
+    //@required this.img,
     @required this.isFav,
    })
       :super(key: key);
@@ -31,7 +32,7 @@ class GridProduct extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.asset(
-                    "$img",
+                      "assets/food"+((1 + new Random().nextInt(12 - 1)).toString())+".jpeg",
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -143,7 +143,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin<Home>{
 
                 Map food = restaurant[index];
                 return GridProduct(
-                  img: food['img'],
+                 // img: food['img'],
                   isFav: false,
                   name: food['name'],
 

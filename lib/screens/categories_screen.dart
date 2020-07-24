@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_ui_kit/util/categories.dart';
 import 'package:restaurant_ui_kit/util/restau.dart';
 import 'package:restaurant_ui_kit/widgets/grid_product.dart';
 import 'package:restaurant_ui_kit/widgets/home_category.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:http/http.dart' as http;
 
 class CategoriesScreen extends StatefulWidget {
   @override
@@ -10,6 +16,23 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
+  final String apiUrl =
+      "https://medicalspace.000webhostapp.com/api/restaurant/getRestaurant/";
+
+  int _type;
+
+  Future<List<dynamic>> fetchRestaurants(String id) async {
+    final apiToken =
+        "CkQFAycSRlu14k2ivRM2CjmWO4KAJgaBO1a5P2O65ESdqBFWBTRikzIsthrsUjFThk22Z6Sd4XAlicgm";
+    var result = await http.get(apiUrl + id, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $apiToken',
+    });
+    Map<String, dynamic> map = json.decode(result.body);
+    List<dynamic> data = map["data"];
+    return data;
+  }
 
   String catie = "italian";
   @override
@@ -38,10 +61,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             Container(
               height: 65.0,
               child: ListView.builder(
+
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemCount: categories == null?0:categories.length,
                 itemBuilder: (BuildContext context, int index) {
+
                   Map cat = categories[index];
                   return HomeCategory(
                     icon: cat['icon'],
@@ -49,10 +74,17 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     items: cat['items'].toString(),
                     isHome: false,
                     tap: (){
+
                       setState((){catie = "${cat['name']}";});
+                      _type=index+1;
+
                     },
                   );
-                },
+
+
+
+                  },
+
               ),
             ),
 
@@ -68,26 +100,45 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             Divider(),
             SizedBox(height: 10.0),
 
-            GridView.builder(
-              shrinkWrap: true,
-              primary: false,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: MediaQuery.of(context).size.width /
-                    (MediaQuery.of(context).size.height / 1.25),
-              ),
-              itemCount: restaurant == null ? 0 :restaurant.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map restau = restaurant[index];
-                return GridProduct(
-                  img: restau['img'],
-                  isFav: false,
-                  name: restau['name'],
+            FutureBuilder <List<dynamic>>(
+            future: fetchRestaurants(_type.toString()),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if (snapshot.hasData){
+                   return  GridView.builder(
 
-                );
-              },
+                      shrinkWrap: true,
+                      primary: false,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: MediaQuery.of(context).size.width /
+                            (MediaQuery.of(context).size.height / 1.25),
+                      ),
+                     itemCount: snapshot.data.length,
+                      itemBuilder: (BuildContext context, int index ) {
+
+
+
+                        Map restau = snapshot.data[index];
+                       // Map food = restaurant[3];
+
+                        return GridProduct(
+
+                          //img: food['img'],
+                          isFav: false,
+                          name: restau['name'],
+
+                        );
+                      },
+                    );
+
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }
             ),
+
 
           ],
         ),

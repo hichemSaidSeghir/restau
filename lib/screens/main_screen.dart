@@ -4,6 +4,8 @@ import 'package:restaurant_ui_kit/screens/cart.dart';
 import 'package:restaurant_ui_kit/screens/favorite_screen.dart';
 import 'package:restaurant_ui_kit/screens/home.dart';
 import 'package:restaurant_ui_kit/util/const.dart';
+import 'package:http/http.dart' as http;
+
 
 
 class MainScreen extends StatefulWidget {
